@@ -1,0 +1,64 @@
+version: '3'
+services:
+
+  #PHP Service
+  todo_mvc_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: todo_mvc_app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: todo_mvc_app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker-confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  todo_mvc_webserver:
+    image: nginx:alpine
+    container_name: todo_mvc_webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker-confs/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL Service
+  todo_mvc_db:
+    image: mysql:5.7.22
+    container_name: todo_mvc_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "33060:33060"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: your_laravel_db_password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker-confs/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local

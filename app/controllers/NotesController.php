@@ -40,7 +40,8 @@ class NotesController {
 		}
 
 		try {
-			$this->service->getByUser();
+			Application::$response->headers->set('Content-Type', 'application/json');
+			Application::$response->setContent(json_encode($this->service->getByUser()));
 		}
 		catch (Throwable $e) {
 			Application::$response->setStatusCode(400);

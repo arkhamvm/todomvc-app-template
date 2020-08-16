@@ -30,6 +30,7 @@ class AuthController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionIndex() {
+		/** @TODO-16.08.2020 Шаблон */
 		Application::$response->setContent('Login/Register');
 	}
 

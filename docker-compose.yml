@@ -18,7 +18,7 @@ services:
       - ./:/var/www
       - ./docker-confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - todo-mvc-app-network
 
   #Nginx Service
   todo_mvc_webserver:
@@ -27,13 +27,12 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "80:80"
-      - "443:443"
+      - "8085:8085"
     volumes:
       - ./:/var/www
       - ./docker-confs/nginx/conf.d/:/etc/nginx/conf.d/
     networks:
-      - app-network
+      - todo-mvc-app-network
 
   #MySQL Service
   todo_mvc_db:
@@ -42,21 +41,22 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "33060:33060"
+      - "33069:33069"
     environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: your_laravel_db_password
+      MYSQL_DATABASE: todo_mvc
+      MYSQL_ROOT_PASSWORD: root
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
       - ./docker-confs/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./docker-confs/mysql/setup.sql:/docker-entrypoint-initdb.d/1-setup.sql
     networks:
-      - app-network
+      - todo-mvc-app-network
 
 #Docker Networks
 networks:
-  app-network:
+  todo-mvc-app-network:
     driver: bridge
 #Volumes
 volumes:

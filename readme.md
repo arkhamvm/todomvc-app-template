@@ -12,4 +12,4 @@ docker-compose up -d
 ```
 
 # Адрес приложения
-http://localhost:8085/index.html
+http://localhost:8085/

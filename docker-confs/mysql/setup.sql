@@ -6,10 +6,28 @@ GRANT ALL ON todo_mvc.* TO 'todo_mvc_user'@'%' IDENTIFIED BY 'todo_mvc_pwd';
 FLUSH PRIVILEGES;
 
 USE todo_mvc;
+SET NAMES utf8;
+
+-- todo_mvc dump
+DROP TABLE IF EXISTS `ref_notes`;
+CREATE TABLE ref_notes (
+    id BIGINT UNSIGNED auto_increment NOT NULL,
+    user_id INT(11) NOT NULL,
+    description VARCHAR(1000) NOT NULL,
+    is_completed BOOL DEFAULT false NOT NULL,
+    is_deleted BOOL DEFAULT false NOT NULL,
+    insert_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    update_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT `pk-ref_notes[id]` PRIMARY KEY (id)
+)
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8
+    COLLATE=utf8_general_ci;
+
+CREATE INDEX `ix-ref_notes[user, deleted, completed]` ON ref_notes (user_id,is_deleted,is_completed) USING BTREE;
 
 -- PHPAuth MySQL dump
 
-SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
@@ -21,7 +39,7 @@ CREATE TABLE `phpauth_config` (
     `setting` varchar(100) NOT NULL,
     `value` varchar(100) DEFAULT NULL,
     UNIQUE KEY `setting` (`setting`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `phpauth_config` (`setting`, `value`) VALUES
     ('attack_mitigation_time',  '+30 minutes'),
@@ -82,7 +100,7 @@ CREATE TABLE `phpauth_attempts` (
     `expiredate` datetime NOT NULL,
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Requests table
 
@@ -97,7 +115,7 @@ CREATE TABLE `phpauth_requests` (
     KEY `type` (`type`),
     KEY `token` (`token`),
     KEY `uid` (`uid`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Sessions table
 

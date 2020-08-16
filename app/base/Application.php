@@ -40,12 +40,8 @@ class Application {
 		static::$request  = Request::createFromGlobals();
 		static::$response = new Response;
 
-		// static::$request->getPathInfo();
-		// static::$request->getSession();
+		/** @TODO-16.08.2020 Роутинг */
 
-		// static::$response->headers->set('Content-Type', 'application/json');
-
-		static::$response->setContent('Hello World');
 		static::$response->send();
 	}
 

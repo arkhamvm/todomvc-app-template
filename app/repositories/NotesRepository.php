@@ -80,16 +80,17 @@ SQL
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function updateDescription(NoteDTO $dto): bool {
+	public function update(NoteDTO $dto): bool {
 		$stmt = Application::$db->prepare(
 <<<SQL
 		UPDATE ref_notes
 		SET description=:description
-		WHERE id = :id
+		WHERE id = :id AND user_id = :user_id
 SQL
 		);
 
 		$stmt->bindParam(':id', $dto->id);
+		$stmt->bindParam(':user_id', $dto->user_id);
 		$stmt->bindParam(':description', $dto->description);
 
 		return $stmt->execute();
@@ -123,22 +124,24 @@ SQL
 	/**
 	 * Удаление заметки.
 	 *
-	 * @param int $id Идентификатор заметки
+	 * @param int $userId Идентификатор пользователя
+	 * @param int $id     Идентификатор заметки
 	 *
 	 * @return bool Результат операции
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function delete(int $id): bool {
+	public function delete(int $userId, int $id): bool {
 		$stmt = Application::$db->prepare(
 <<<SQL
 		UPDATE ref_notes
 		SET is_deleted = TRUE
-		WHERE id = :id
+		WHERE id = :id AND user_id = :user_id
 SQL
 		);
 
 		$stmt->bindParam(':id', $id);
+		$stmt->bindParam(':user_id', $userId);
 
 		return $stmt->execute();
 	}

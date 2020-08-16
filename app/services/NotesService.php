@@ -24,6 +24,19 @@ class NotesService {
 	}
 
 	/**
+	 * Поиск всех заметок пользователя.
+	 *
+	 * @return NoteDTO[] Массив заметок
+	 *
+	 * @author Vladimir <arkham.vm@gmail.com>
+	 */
+	public function getByUser(): array {
+		$userId = Application::$auth->getCurrentUID();
+
+		return $this->repository->getByUserId($userId);
+	}
+
+	/**
 	 * Обновление текста заметки.
 	 *
 	 * @param string $description Текст заметки
@@ -51,26 +64,28 @@ class NotesService {
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function updateDescription(int $id, string $description): bool {
+	public function update(int $id, string $description): bool {
 		$dto = new NoteDTO();
 
 		$dto->id          = $id;
+		$dto->user_id     = Application::$auth->getCurrentUID();
 		$dto->description = $description;
 
-		return $this->repository->updateDescription($dto);
+		return $this->repository->update($dto);
 	}
 
 	/**
 	 * Смена флага завершённости заметок.
 	 *
-	 * @param int   $userId Идентификатор пользователя
-	 * @param int[] $ids    Идентификаторы заметок
+	 * @param int[] $ids Идентификаторы заметок
 	 *
 	 * @return bool Результат операции
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function toggleCompleted(int $userId, array $ids): bool {
+	public function toggleCompleted(array $ids): bool {
+		$userId = Application::$auth->getCurrentUID();
+
 		return $this->repository->toggleCompleted($userId, $ids);
 	}
 
@@ -84,6 +99,8 @@ class NotesService {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function delete(int $id): bool {
-		return $this->repository->delete($id);
+		$userId = Application::$auth->getCurrentUID();
+
+		return $this->repository->delete($userId, $id);
 	}
 }

@@ -25,6 +25,15 @@ class AuthController {
 	}
 
 	/**
+	 * Страница входа/регистрации.
+	 *
+	 * @author Vladimir <arkham.vm@gmail.com>
+	 */
+	public function actionIndex() {
+		Application::$response->setContent('Login/Register');
+	}
+
+	/**
 	 * Действие регистрации.
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>

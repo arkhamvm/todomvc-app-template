@@ -27,6 +27,13 @@ class Application {
 	/** Конфигурация приложения */
 	public static array $config = [];
 
+	/** Роутер */
+	protected ?Router $router = null;
+
+	public function __construct() {
+		$this->router = new Router();
+	}
+
 	/**
 	 * Запуск приложения.
 	 *
@@ -40,7 +47,7 @@ class Application {
 		static::$request  = Request::createFromGlobals();
 		static::$response = new Response;
 
-		/** @TODO-16.08.2020 Роутинг */
+		$this->router->handleRequest();
 
 		static::$response->send();
 	}

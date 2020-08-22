@@ -6,6 +6,8 @@ namespace App\controllers;
 
 use App\base\Application;
 use App\services\AuthService;
+use App\views\layouts\DefaultLayout;
+use App\views\pages\AuthPage;
 use Throwable;
 
 /**
@@ -17,8 +19,9 @@ class AuthController {
 	/** Сервис аутентификации */
 	protected ?AuthService $service = null;
 
-	public const PARAM_EMAIL    = 'email';
-	public const PARAM_PASSWORD = 'password';
+	public const PARAM_EMAIL           = 'email';
+	public const PARAM_PASSWORD        = 'password';
+	public const PARAM_PASSWORD_REPEAT = 'password_repeat';
 
 	public function __construct() {
 		$this->service = new AuthService();
@@ -27,11 +30,14 @@ class AuthController {
 	/**
 	 * Страница входа/регистрации.
 	 *
+	 * @param string|null $error Ошибка
+	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function actionIndex() {
-		/** @TODO-16.08.2020 Шаблон */
-		Application::$response->setContent('Login/Register');
+	public function actionIndex(?string $error = null) {
+		Application::$response->setContent((string)(new DefaultLayout(
+			(string)(new AuthPage($error))
+		)));
 	}
 
 	/**
@@ -40,15 +46,19 @@ class AuthController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionRegister() {
-		$email    = Application::$request->request->get(static::PARAM_EMAIL);
-		$password = Application::$request->request->get(static::PARAM_PASSWORD);
+		$email          = Application::$request->request->get(static::PARAM_EMAIL) ?? '';
+		$password       = Application::$request->request->get(static::PARAM_PASSWORD) ?? '';
+		$passwordRepeat = Application::$request->request->get(static::PARAM_PASSWORD_REPEAT) ?? '';
 
 		try {
-			$this->service->register($email, $password);
+			$this->service->register($email, $password, $passwordRepeat);
+			$this->service->login($email, $password);
+
+			Application::$response->setStatusCode(302);
+			Application::$response->headers->set('Location', '/');
 		}
 		catch (Throwable $e) {
-			Application::$response->setStatusCode(400);
-			Application::$response->setContent($e->getMessage());
+			$this->actionIndex($e->getMessage());
 		}
 	}
 
@@ -58,15 +68,17 @@ class AuthController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionLogin() {
-		$email    = Application::$request->request->get(static::PARAM_EMAIL);
-		$password = Application::$request->request->get(static::PARAM_PASSWORD);
+		$email    = Application::$request->request->get(static::PARAM_EMAIL) ?? '';
+		$password = Application::$request->request->get(static::PARAM_PASSWORD) ?? '';
 
 		try {
 			$this->service->login($email, $password);
+
+			Application::$response->setStatusCode(302);
+			Application::$response->headers->set('Location', '/');
 		}
 		catch (Throwable $e) {
-			Application::$response->setStatusCode(400);
-			Application::$response->setContent($e->getMessage());
+			$this->actionIndex($e->getMessage());
 		}
 	}
 
@@ -78,10 +90,12 @@ class AuthController {
 	public function actionLogout() {
 		try {
 			$this->service->logout();
+
+			Application::$response->setStatusCode(302);
+			Application::$response->headers->set('Location', '/');
 		}
 		catch (Throwable $e) {
-			Application::$response->setStatusCode(400);
-			Application::$response->setContent($e->getMessage());
+			$this->actionIndex($e->getMessage());
 		}
 	}
 }

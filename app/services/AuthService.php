@@ -50,8 +50,9 @@ class AuthService {
 	/**
 	 * Регистрация.
 	 *
-	 * @param string $email     Email
-	 * @param string $password  Пароль
+	 * @param string $email          Email
+	 * @param string $password       Пароль
+	 * @param string $passwordRepeat Пароль повторно
 	 *
 	 * @return bool Успех операции
 	 *
@@ -59,10 +60,11 @@ class AuthService {
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function register(string $email, string $password): bool {
-		$result = Application::$auth->register($email, $password, $password);
+	public function register(string $email, string $password, string $passwordRepeat): bool {
+		$result = Application::$auth->register($email, $password, $passwordRepeat);
 
 		if (false === $result['error']) {
+
 			return true;
 		}
 

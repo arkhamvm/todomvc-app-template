@@ -40,6 +40,7 @@ CREATE TABLE `phpauth_config` (
     `value` varchar(100) DEFAULT NULL,
     UNIQUE KEY `setting` (`setting`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_config[setting]` ON phpauth_config (setting) USING BTREE;
 
 INSERT INTO `phpauth_config` (`setting`, `value`) VALUES
     ('attack_mitigation_time',  '+30 minutes'),
@@ -58,7 +59,7 @@ INSERT INTO `phpauth_config` (`setting`, `value`) VALUES
     ('emailmessage_suppress_activation',  '0'),
     ('emailmessage_suppress_reset', '0'),
     ('mail_charset','UTF-8'),
-    ('password_min_score',  '3'),
+    ('password_min_score',  '0'),
     ('site_activation_page',  'activate'),
     ('site_email',  'no-reply@phpauth.cuonic.com'),
     ('site_key',  'fghuior.)/!/jdUkd8s2!7HVHG7777ghg'),
@@ -101,6 +102,7 @@ CREATE TABLE `phpauth_attempts` (
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_attempts[ip]` ON phpauth_attempts (ip) USING BTREE;
 
 -- Requests table
 
@@ -116,6 +118,8 @@ CREATE TABLE `phpauth_requests` (
     KEY `token` (`token`),
     KEY `uid` (`uid`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_requests[id]` ON phpauth_requests (id) USING BTREE;
+CREATE INDEX `ix-phpauth_requests[uid]` ON phpauth_requests (uid) USING BTREE;
 
 -- Sessions table
 
@@ -130,6 +134,8 @@ CREATE TABLE `phpauth_sessions` (
     `cookie_crc` char(40) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_sessions[id]` ON phpauth_sessions (id) USING BTREE;
+CREATE INDEX `ix-phpauth_sessions[uid]` ON phpauth_sessions (uid) USING BTREE;
 
 -- Users table
 
@@ -143,6 +149,8 @@ CREATE TABLE `phpauth_users` (
     PRIMARY KEY (`id`),
     KEY `email` (`email`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_users[id]` ON phpauth_users (id) USING BTREE;
+CREATE INDEX `ix-phpauth_users[email]` ON phpauth_users (email) USING BTREE;
 
 -- Banned emails reference
 
@@ -152,3 +160,4 @@ CREATE TABLE `phpauth_emails_banned` (
     `domain` varchar(100) DEFAULT NULL,
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `ix-phpauth_emails_banned[id]` ON phpauth_emails_banned (id) USING BTREE;

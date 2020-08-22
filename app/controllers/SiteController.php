@@ -21,7 +21,7 @@ class SiteController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionIndex() {
-		/** @TODO-16.08.2020 Шаблон */
-		Application::$response->setContent(file_get_contents(APP_ROOT . '/views/index.html'));
+		Application::$response->setStatusCode(302);
+		Application::$response->headers->set('Location', '/notes/index');
 	}
 }

@@ -7,6 +7,8 @@ namespace App\controllers;
 use App\base\Application;
 use App\services\AuthService;
 use App\services\NotesService;
+use App\views\layouts\DefaultLayout;
+use App\views\pages\AuthPage;
 use Throwable;
 
 /**
@@ -33,15 +35,19 @@ class NotesController {
 	 */
 	public function actionIndex() {
 		if (false === Application::$auth->isLogged()) {
-			Application::$response->setStatusCode(301);
+			Application::$response->setStatusCode(302);
 			Application::$response->headers->set('Location', '/auth/index');
 
 			return;
 		}
 
 		try {
-			Application::$response->headers->set('Content-Type', 'application/json');
-			Application::$response->setContent(json_encode($this->service->getByUser()));
+			// Application::$response->headers->set('Content-Type', 'application/json');
+			// Application::$response->setContent(json_encode($this->service->getByUser()));
+
+			Application::$response->setContent((string)(new DefaultLayout(
+
+			)));
 		}
 		catch (Throwable $e) {
 			Application::$response->setStatusCode(400);

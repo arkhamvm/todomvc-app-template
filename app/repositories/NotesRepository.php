@@ -29,7 +29,7 @@ class NotesRepository {
 <<<SQL
 		SELECT id, user_id, description, is_completed, is_deleted, insert_stamp, update_stamp
 		FROM ref_notes
-		WHERE user_id=:user_id
+		WHERE user_id = :user_id
 			AND is_deleted = false
 		ORDER BY insert_stamp ASC
 SQL
@@ -107,41 +107,39 @@ SQL
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function toggleCompleted(int $userId, array $ids): bool {
+		$idsString = implode(',', $ids);
+
 		$stmt = Application::$db->prepare(
 <<<SQL
 		UPDATE ref_notes
 		SET is_completed = NOT is_completed
-		WHERE id IN (:ids) AND user_id = :user_id
+		WHERE id IN ({$idsString}) AND user_id = {$userId}
 SQL
 		);
-
-		$stmt->bindParam(':ids', $ids);
-		$stmt->bindParam(':user_id', $userId);
 
 		return $stmt->execute();
 	}
 
 	/**
-	 * Удаление заметки.
+	 * Удаление заметок.
 	 *
-	 * @param int $userId Идентификатор пользователя
-	 * @param int $id     Идентификатор заметки
+	 * @param int   $userId Идентификатор пользователя
+	 * @param int[] $ids    Идентификаторы заметок
 	 *
 	 * @return bool Результат операции
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function delete(int $userId, int $id): bool {
+	public function delete(int $userId, array $ids): bool {
+		$idsString = implode(',', $ids);
+
 		$stmt = Application::$db->prepare(
 <<<SQL
 		UPDATE ref_notes
 		SET is_deleted = TRUE
-		WHERE id = :id AND user_id = :user_id
+		WHERE id IN ({$idsString}) AND user_id = {$userId}
 SQL
 		);
-
-		$stmt->bindParam(':id', $id);
-		$stmt->bindParam(':user_id', $userId);
 
 		return $stmt->execute();
 	}

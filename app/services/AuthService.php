@@ -6,6 +6,7 @@ namespace App\services;
 
 use App\base\Application;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Сервис авторизации
@@ -33,7 +34,7 @@ class AuthService {
 			return true;
 		}
 
-		throw new Exception($result['message']);
+		throw new InvalidArgumentException($result['message']);
 	}
 
 	/**
@@ -68,6 +69,6 @@ class AuthService {
 			return true;
 		}
 
-		throw new Exception($result['message']);
+		throw new InvalidArgumentException($result['message']);
 	}
 }

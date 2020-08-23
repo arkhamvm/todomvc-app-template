@@ -35,8 +35,6 @@ class DefaultLayout extends Layout {
 	</head>
 	<body>
         <?= $viewContent ?>
-		<script src="/static/todomvc-common/base.js"></script>
-		<script src="/static/js/app.js"></script>
 	</body>
 </html>
 <?php };}}

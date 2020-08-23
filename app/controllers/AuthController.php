@@ -8,6 +8,7 @@ use App\base\Application;
 use App\services\AuthService;
 use App\views\layouts\DefaultLayout;
 use App\views\pages\AuthPage;
+use InvalidArgumentException;
 use Throwable;
 
 /**
@@ -46,9 +47,9 @@ class AuthController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionRegister() {
-		$email          = Application::$request->request->get(static::PARAM_EMAIL) ?? '';
-		$password       = Application::$request->request->get(static::PARAM_PASSWORD) ?? '';
-		$passwordRepeat = Application::$request->request->get(static::PARAM_PASSWORD_REPEAT) ?? '';
+		$email          = Application::$request->request->get(static::PARAM_EMAIL, '');
+		$password       = Application::$request->request->get(static::PARAM_PASSWORD, '');
+		$passwordRepeat = Application::$request->request->get(static::PARAM_PASSWORD_REPEAT, '');
 
 		try {
 			$this->service->register($email, $password, $passwordRepeat);
@@ -57,8 +58,12 @@ class AuthController {
 			Application::$response->setStatusCode(302);
 			Application::$response->headers->set('Location', '/');
 		}
-		catch (Throwable $e) {
+		catch (InvalidArgumentException $e) {
 			$this->actionIndex($e->getMessage());
+		}
+		catch (Throwable $e) {
+			Application::$response->setStatusCode(400);
+			Application::$response->setContent((DEBUG ? $e->getMessage() : 'Неверный запрос'));
 		}
 	}
 
@@ -68,8 +73,8 @@ class AuthController {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function actionLogin() {
-		$email    = Application::$request->request->get(static::PARAM_EMAIL) ?? '';
-		$password = Application::$request->request->get(static::PARAM_PASSWORD) ?? '';
+		$email    = Application::$request->request->get(static::PARAM_EMAIL, '');
+		$password = Application::$request->request->get(static::PARAM_PASSWORD, '');
 
 		try {
 			$this->service->login($email, $password);
@@ -77,8 +82,12 @@ class AuthController {
 			Application::$response->setStatusCode(302);
 			Application::$response->headers->set('Location', '/');
 		}
-		catch (Throwable $e) {
+		catch (InvalidArgumentException $e) {
 			$this->actionIndex($e->getMessage());
+		}
+		catch (Throwable $e) {
+			Application::$response->setStatusCode(400);
+			Application::$response->setContent((DEBUG ? $e->getMessage() : 'Неверный запрос'));
 		}
 	}
 
@@ -94,8 +103,12 @@ class AuthController {
 			Application::$response->setStatusCode(302);
 			Application::$response->headers->set('Location', '/');
 		}
-		catch (Throwable $e) {
+		catch (InvalidArgumentException $e) {
 			$this->actionIndex($e->getMessage());
+		}
+		catch (Throwable $e) {
+			Application::$response->setStatusCode(400);
+			Application::$response->setContent((DEBUG ? $e->getMessage() : 'Неверный запрос'));
 		}
 	}
 }

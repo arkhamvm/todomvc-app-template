@@ -7,7 +7,6 @@ namespace App\services;
 use App\base\Application;
 use App\dtos\NoteDTO;
 use App\repositories\NotesRepository;
-use Exception;
 
 /**
  * Сервис заметок
@@ -31,7 +30,7 @@ class NotesService {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function getByUser(): array {
-		$userId = Application::$auth->getCurrentUID();
+		$userId = (int)Application::$auth->getCurrentUID();
 
 		return $this->repository->getByUserId($userId);
 	}
@@ -48,7 +47,7 @@ class NotesService {
 	public function create(string $description): bool {
 		$dto = new NoteDTO();
 
-		$dto->user_id     = Application::$auth->getCurrentUID();
+		$dto->user_id     = (int)Application::$auth->getCurrentUID();
 		$dto->description = $description;
 
 		return $this->repository->insert($dto);
@@ -68,7 +67,7 @@ class NotesService {
 		$dto = new NoteDTO();
 
 		$dto->id          = $id;
-		$dto->user_id     = Application::$auth->getCurrentUID();
+		$dto->user_id     = (int)Application::$auth->getCurrentUID();
 		$dto->description = $description;
 
 		return $this->repository->update($dto);
@@ -84,7 +83,7 @@ class NotesService {
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
 	public function toggleCompleted(array $ids): bool {
-		$userId = Application::$auth->getCurrentUID();
+		$userId = (int)Application::$auth->getCurrentUID();
 
 		return $this->repository->toggleCompleted($userId, $ids);
 	}
@@ -92,15 +91,15 @@ class NotesService {
 	/**
 	 * Удаление заметки.
 	 *
-	 * @param int $id Идентификатор заметки
+	 * @param int[] $ids Идентификаторы заметок
 	 *
 	 * @return bool Результат операции
 	 *
 	 * @author Vladimir <arkham.vm@gmail.com>
 	 */
-	public function delete(int $id): bool {
-		$userId = Application::$auth->getCurrentUID();
+	public function delete(array $ids): bool {
+		$userId = (int)Application::$auth->getCurrentUID();
 
-		return $this->repository->delete($userId, $id);
+		return $this->repository->delete($userId, $ids);
 	}
 }

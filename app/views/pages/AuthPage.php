@@ -54,8 +54,9 @@ class AuthPage extends View {
 				<div>
 					<input type="password" name="password" placeholder="Password" required>
 				</div>
-
-				<input class="submit" type="submit" value="Login">
+				<div>
+					<input class="submit" type="submit" value="Login">
+				</div>
 			</form>
 
 			<form action="/auth/register" method="post" class="register-form">
@@ -68,101 +69,103 @@ class AuthPage extends View {
 				<div>
 					<input type="password" name="password_repeat" placeholder="Repeat password" required>
 				</div>
-
-				<input class="submit" type="submit" value="Register">
+				<div>
+					<input class="submit" type="submit" value="Register">
+				</div>
 			</form>
 		<?php else: ?>
 			<form action="/auth/logout" method="post" class="logout-form">
 				<h3>Loginned as:</h3>
-				<h2><?= $user['email'] ?></h2>
+				<h2><?= $user['email'] ?> (id: <?= $user['id'] ?>)</h2>
 
-				<input class="submit" type="submit" value="Logout">
+				<div>
+					<input class="submit" type="submit" value="Logout">
+				</div>
 			</form>
 		<?php endif; ?>
 	</section>
-	<script src="/static/js/jquery-3.5.1.min.js"></script>
-	<script type="application/javascript" defer>
-		const loginForm    = $('.login-form');
-		const registerForm = $('.register-form');
-
-		$('.register-tab').each(function(){
-			$(this).click(function(){
-				loginForm.hide();
-				registerForm.show();
-			});
-		});
-
-		$('.login-tab').each(function(){
-			$(this).click(function(){
-				loginForm.show();
-				registerForm.hide();
-			});
-		});
-	</script>
-	<style type="text/css">
-		.error {
-			padding:          2em;
-			color:            #af5b5e;
-			background-color: whitesmoke;
-		}
-
-		.tabs {
-			display:         flex;
-			justify-content: space-between;
-		}
-
-		.login-tab, .register-tab {
-			color:          whitesmoke;
-			font-weight:    bold;
-			width:          50%;
-			text-align:     center;
-			vertical-align: middle;
-			line-height:    40px;
-			cursor:         pointer;
-		}
-
-		.login-tab, .login-form, .logout-form {
-			background-color: lightsteelblue;
-		}
-
-		.register-tab, .register-form {
-			background-color: lightslategrey;
-		}
-
-		.login-form, .logout-form, .register-form {
-			padding: 2em;
-		}
-
-		.login-form input, .logout-form input, .register-form input {
-			padding: 0.6em;
-			margin:  1em;
-			width:   300px;
-		}
-
-		.register-form {
-			display: none;
-		}
-
-		.submit {
-			margin-top:       2em;
-			border:           none;
-			background-color: white;
-			font-size:        15px;
-			font-weight:      bold;
-			transition:       all 0.5s;
-		}
-
-		.submit:hover {
-			color: white;
-		}
-
-		.login-form .submit:hover, .logout-form .submit:hover {
-			background-color: lightslategrey;
-		}
-
-		.register-form .submit:hover {
-			background-color: lightsteelblue;
-		}
-	</style>
 </section>
+<footer class="info">
+	<p>Auth required for access to notes</p>
+</footer>
+<script src="/static/js/jquery-3.5.1.min.js"></script>
+<script type="application/javascript" defer>
+	const loginForm    = $('.login-form');
+	const registerForm = $('.register-form');
+
+	$('.register-tab:first').click(function(){
+		loginForm.hide();
+		registerForm.show();
+	});
+
+	$('.login-tab:first').click(function(){
+		loginForm.show();
+		registerForm.hide();
+	});
+</script>
+<style type="text/css">
+	.error {
+		padding:          2em;
+		color:            #af5b5e;
+		background-color: whitesmoke;
+	}
+
+	.tabs {
+		display:         flex;
+		justify-content: space-between;
+	}
+
+	.login-tab, .register-tab {
+		color:          whitesmoke;
+		font-weight:    bold;
+		width:          50%;
+		text-align:     center;
+		vertical-align: middle;
+		line-height:    40px;
+		cursor:         pointer;
+	}
+
+	.login-tab, .login-form, .logout-form {
+		background-color: lightsteelblue;
+	}
+
+	.register-tab, .register-form {
+		background-color: lightslategrey;
+	}
+
+	.login-form, .logout-form, .register-form {
+		padding: 2em;
+	}
+
+	.login-form input, .logout-form input, .register-form input {
+		padding: 0.6em;
+		margin:  1em;
+		width:   300px;
+	}
+
+	.register-form {
+		display: none;
+	}
+
+	.submit {
+		margin-top:       2em;
+		border:           none;
+		background-color: white;
+		font-size:        15px;
+		font-weight:      bold;
+		transition:       all 0.25s;
+	}
+
+	.submit:hover {
+		color: white;
+	}
+
+	.login-form .submit:hover, .logout-form .submit:hover {
+		background-color: lightslategrey;
+	}
+
+	.register-form .submit:hover {
+		background-color: lightsteelblue;
+	}
+</style>
 <?php };}}

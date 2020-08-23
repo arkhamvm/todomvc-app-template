@@ -21,7 +21,7 @@ class NoteDTO {
 	/** Флаг удалённости */
 	public ?bool $is_deleted;
 	/** Таймстамп вставки */
-	public ?int $insert_stamp;
+	public ?string $insert_stamp;
 	/** Таймстамп изменения */
-	public ?int $update_stamp;
+	public ?string $update_stamp;
 }

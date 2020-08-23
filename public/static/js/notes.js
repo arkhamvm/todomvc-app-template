@@ -252,8 +252,13 @@
 			}
 		},
 		deleteCompleted: async function () {
+			const items = this.getCompletedNotes();
+			if (0 === items.length) {
+				return;
+			}
+
 			const formData = new FormData();
-			this.getCompletedNotes().forEach((item) => {
+			items.forEach((item) => {
 				formData.append('ids[]', item['id']);
 			})
 
